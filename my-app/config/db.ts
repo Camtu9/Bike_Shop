@@ -1,39 +1,35 @@
 import mongoose from "mongoose";
 
+type CachedMongoose = {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+};
+
 declare global {
-  var mongoose:
-    | {
-        conn: typeof mongoose | null;
-        promise: Promise<typeof mongoose> | null;
-      }
-    | undefined;
+  var mongoose: CachedMongoose | undefined;
 }
 
-let cached = global.mongoose;
+let cached: CachedMongoose = global.mongoose ?? { conn: null, promise: null };
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+if (!global.mongoose) {
+  global.mongoose = cached;
 }
 
 async function connectDB() {
-  if (cached?.conn) {
-    return cached.conn;
-  }
+  if (cached.conn) return cached.conn;
 
-  if (!cached?.promise) {
+  if (!cached.promise) {
     const opts = {
       bufferCommands: false,
     };
 
     cached.promise = mongoose
       .connect(`${process.env.MONGODB_URI}/bikezone`, opts)
-      .then((mongoose) => {
-        return mongoose;
-      });
+      .then((mongoose) => mongoose);
   }
 
-  cached.conn = await cached?.promise;
-  return cached?.conn;
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
 export default connectDB;
