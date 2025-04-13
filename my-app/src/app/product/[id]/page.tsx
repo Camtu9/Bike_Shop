@@ -8,7 +8,7 @@ import Image from "next/image";
 import { assets } from "@/assets/assets";
 import Button from "@/components/Button";
 
-const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
+const ProductPage: React.FC = () => {
   const { products, addToCart } = useAppContext();
   const router = useRouter();
   const [productData, setProductData] = useState<Product>();
@@ -32,7 +32,7 @@ const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
         <div className="px-5 lg:px-16 xl:px-20">
           <div className="rounded-lg overflow-hidden bg-gray-500/10 mb-4">
             <Image
-              src={mainImage ?? product.image[0]}
+              src={mainImage ?? productData.image[0]}
               alt="product image"
               className="w-full h-auto object-cover mix-blend-multiply"
               width={1280}
@@ -40,7 +40,7 @@ const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
             />
           </div>
           <div className="grid grid-cols-4 gap-4">
-            {product.image.map((img, i) => (
+            {productData.image.map((img, i) => (
               <div
                 key={i}
                 onClick={() => setMainImage(img)}
