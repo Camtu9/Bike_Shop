@@ -141,6 +141,8 @@ export const userDummyData: UserData = {
   id: "user1",
   name: "Người Dùng Demo",
   email: "demo@example.com",
+  imageUrl: "abc",
+  cartItems: {}
 };
 
 export const orderDummyData: Order[] = [
@@ -165,11 +167,15 @@ export const orderDummyData: Order[] = [
     ],
     amount: 450,
     address: {
+      _id: "123",
+      userId: "1",
       fullName: "John Doe",
       phoneNumber: "1234567890",
+      pincode: 123,
       area: "Downtown",
       city: "San Francisco",
       state: "CA",
+      __v: 1
     },
     status: "Delivered",
     date: 1712832000000,
@@ -195,11 +201,15 @@ export const orderDummyData: Order[] = [
     ],
     amount: 1080,
     address: {
-      fullName: "Jane Smith",
-      phoneNumber: "9876543210",
-      area: "Uptown",
-      city: "New York",
-      state: "NY",
+      _id: "123",
+      userId: "1",
+      fullName: "John Doe",
+      phoneNumber: "1234567890",
+      pincode: 123,
+      area: "Downtown",
+      city: "San Francisco",
+      state: "CA",
+      __v: 1
     },
     status: "Shipped",
     date: 1712918400000,
