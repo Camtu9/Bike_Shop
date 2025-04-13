@@ -52,9 +52,12 @@ const AddProduct = () => {
                   id={`image${index}`}
                   hidden={true}
                   onChange={(e) => {
-                    const updatedFiles = [...files];
-                    updatedFiles[index] = e.target.files?.[0];
-                    setFiles(updatedFiles);
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const updatedFiles = [...files];
+                      updatedFiles[index] = file;
+                      setFiles(updatedFiles);
+                    }
                   }}
                 />
                 <Image
