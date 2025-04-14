@@ -138,7 +138,7 @@ export const productsDummyData: Product[] = [
 ];
 
 export const userDummyData: UserData = {
-  id: "user1",
+  _id: "user1",
   name: "Người Dùng Demo",
   email: "demo@example.com",
   imageUrl: "abc",
