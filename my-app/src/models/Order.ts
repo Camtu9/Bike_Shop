@@ -1,4 +1,5 @@
-import { AddressData } from "@/types/address";
+
+import { OrderData } from "@/types/order";
 import mongoose, { Schema } from "mongoose";
 
 const orderSchema = new Schema<OrderData>(
