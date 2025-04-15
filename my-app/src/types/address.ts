@@ -1,4 +1,4 @@
-export type Address = {
+export type AddressData = {
     _id: string;
     userId: string;
     fullName: string;
