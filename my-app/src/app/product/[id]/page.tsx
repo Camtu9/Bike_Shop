@@ -1,7 +1,7 @@
 "use client";
 import ProductCard from "@/components/ProductCard";
 import { useAppContext } from "@/context/AppContext";
-import { Product } from "@/types/product";
+import { ProductData } from "@/types/product";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import Button from "@/components/Button";
 const ProductPage: React.FC = () => {
   const { products, addToCart } = useAppContext();
   const router = useRouter();
-  const [productData, setProductData] = useState<Product>();
+  const [productData, setProductData] = useState<ProductData>();
   const [mainImage, setMainImage] = useState<string | null>(null);
   const { id } = useParams();
 

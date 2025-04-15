@@ -1,17 +1,17 @@
-import { Address } from "./address";
-import { Product } from "./product";
+import { AddressData } from "./address";
+import { ProductData } from "./product";
 
 export type OrderItem = {
-  product: Product;
+  product: ProductData;
   quantity: number;
 };
 
-export type Order = {
+export type OrderData = {
   _id: string;
   userId: string;
   items: OrderItem[];
   amount: number;
-  address: Address;
+  address: AddressData;
   status: string;
   date: number;
 };

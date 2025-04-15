@@ -1,36 +1,92 @@
 "use client";
 
-import { addressDummyData } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
-import { Address } from "@/types/address";
+import { AddressData } from "@/types/address";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const OrderSummary: React.FC = () => {
-  const { currency, getCartCount, getCartAmount } = useAppContext();
+  const {
+    currency,
+    getCartCount,
+    getCartAmount,
+    getToken,
+    cartItems,
+    setCartItems,
+    user,
+  } = useAppContext();
   const router = useRouter();
 
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
+    null
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userAddresses, setUserAddresses] = useState<Address[]>([]);
+  const [userAddresses, setUserAddresses] = useState<AddressData[]>([]);
 
   const fetchUserAddresses = async () => {
-    setUserAddresses(addressDummyData);
+    try {
+      const token = await getToken();
+      const { data } = await axios.get("/api/user/get-address", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (data.success) {
+        setUserAddresses(data.addresses);
+        if (data.addresses.length > 0) {
+          setSelectedAddress(data.addresses[0]);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
-  const handleAddressSelect = (address: Address) => {
+  const handleAddressSelect = (address: AddressData) => {
     setSelectedAddress(address);
     setIsDropdownOpen(false);
   };
 
   const createOrder = async () => {
-    console.log("Creating order...");
+    try {
+      if (!selectedAddress) {
+        return toast.error("Please select an address");
+      }
+      let cartItemsArray = Object.keys(cartItems).map((key) => {
+        return {
+          product: key,
+          quantity: cartItems[key],
+        };
+      });
+      cartItemsArray = cartItemsArray.filter((item) => item.quantity > 0);
+      if (cartItemsArray.length === 0) {
+        return toast.error("Cart is empty");
+      }
+
+      const token = await getToken();
+      const { data } = await axios.post(
+        "/api/create",
+        { address: selectedAddress._id, items: cartItemsArray },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        setCartItems({});
+        router.push("/order-placed");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
-    fetchUserAddresses();
-  }, []);
+    if (user) {
+      fetchUserAddresses();
+    }
+  }, [user]);
 
   return (
     <div className="w-full md:w-96 bg-gray-500/5 p-5">
@@ -105,7 +161,9 @@ const OrderSummary: React.FC = () => {
               placeholder="Enter promo code"
               className="flex-grow w-full outline-none p-2.5 text-gray-600 border"
             />
-            <Button variant="primary" className="py-3.5">Apply</Button>
+            <Button variant="primary" className="py-3.5">
+              Apply
+            </Button>
           </div>
         </div>
         <hr className="border-gray-500/30 my-5" />

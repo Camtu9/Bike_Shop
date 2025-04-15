@@ -1,24 +1,40 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
-import { assets, orderDummyData } from "@/assets/assets";
+import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Loading from "@/components/Loading";
-import { Order } from "@/types/order";
+import { OrderData } from "@/types/order";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Orders = () => {
-  const { currency } = useAppContext();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const { currency, getToken, user } = useAppContext();
+  const [orders, setOrders] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchSellerOrders = async () => {
-    setOrders(orderDummyData);
-    setLoading(false);
+    try {
+      const token = await getToken();
+      const { data } = await axios.get("/api/order/seller-orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (data.success) {
+        setOrders(data.orders);
+        setLoading(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
-    fetchSellerOrders();
-  }, []);
+    if (user) {
+      fetchSellerOrders();
+    }
+  }, [user]);
 
   return (
     <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
@@ -52,7 +68,9 @@ const Orders = () => {
                 </div>
                 <div>
                   <p>
-                    <span className="font-medium">{order.address.fullName}</span>
+                    <span className="font-medium">
+                      {order.address.fullName}
+                    </span>
                     <br />
                     <span>{order.address.area}</span>
                     <br />
@@ -68,7 +86,9 @@ const Orders = () => {
                 <div>
                   <p className="flex flex-col">
                     <span>Phương thức: COD</span>
-                    <span>Ngày: {new Date(order.date).toLocaleDateString()}</span>
+                    <span>
+                      Ngày: {new Date(order.date).toLocaleDateString()}
+                    </span>
                     <span>Thanh toán: Chờ xử lý</span>
                   </p>
                 </div>

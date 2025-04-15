@@ -4,11 +4,11 @@ import React from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
-import type { Product } from "@/types/product";
+import type { ProductData } from "@/types/product";
 import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductData;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {

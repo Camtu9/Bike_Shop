@@ -5,14 +5,17 @@ import Image from "next/image";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
 import Button from "@/components/Button";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useAppContext } from "@/context/AppContext";
 
 const categoryOptions = [
-    { label: 'Xe đạp địa hình', value: 'Xe đạp địa hình' },
-    { label: 'Xe đạp đua', value: 'Xe đạp đua' },
-    { label: 'Xe đạp gấp', value: 'Xe đạp gấp' },
-    { label: 'Xe đạp điện', value: 'Xe đạp điện' },
-    { label: 'Phụ kiện', value: 'Phụ kiện' },
-  ];
+  { label: "Xe đạp địa hình", value: "Xe đạp địa hình" },
+  { label: "Xe đạp đua", value: "Xe đạp đua" },
+  { label: "Xe đạp gấp", value: "Xe đạp gấp" },
+  { label: "Xe đạp điện", value: "Xe đạp điện" },
+  { label: "Phụ kiện", value: "Phụ kiện" },
+];
 
 const AddProduct = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -23,20 +26,43 @@ const AddProduct = () => {
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
   const [stock, setStock] = useState("");
+  const { getToken } = useAppContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const productData = {
-      name,
-      description,
-      category,
-      brand,
-      price: Number(price),
-      offerPrice: Number(offerPrice),
-      stock: Number(stock),
-      image: files.map((file) => URL.createObjectURL(file)),
-    };
-    console.log(productData);
+    const formData = new FormData();
+    console.log("form",formData)
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("offerPrice", offerPrice);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("brand", brand);
+    formData.append("stock", stock);
+    for (let i = 0; i < files.length; i++) {
+      formData.append("image", files[i]);
+    }
+    try {
+      const token = await getToken();
+      const { data } = await axios.post("/api/product/add", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (data.success) {
+        toast.success(data.message);
+        setFiles([]);
+        setName("");
+        setPrice("");
+        setOfferPrice("");
+        setDescription("");
+        setCategory("");
+        setBrand("");
+        setStock("");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -175,10 +201,7 @@ const AddProduct = () => {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          className="py-3.5"
-          >
+        <Button type="submit" className="py-3.5">
           Thêm sản phẩm
         </Button>
       </form>

@@ -1,9 +1,8 @@
-'use client'
+"use client";
 
-import { productsDummyData, userDummyData } from "@/assets/assets";
-import { Product } from "@/types/product";
+import { ProductData } from "@/types/product";
 import { UserData } from "@/types/user";
-import { useUser} from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import {
   createContext,
   useContext,
@@ -11,6 +10,9 @@ import {
   useState,
   ReactNode,
 } from "react";
+import { GetToken } from "@clerk/types";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface AppContextType {
   user: ReturnType<typeof useUser>["user"];
@@ -19,7 +21,7 @@ interface AppContextType {
   setIsSeller: (value: boolean) => void;
   userData: UserData | false;
   fetchUserData: () => Promise<void>;
-  products: Product[];
+  products: ProductData[];
   fetchProductData: () => Promise<void>;
   cartItems: Record<string, number>;
   setCartItems: (items: Record<string, number>) => void;
@@ -27,6 +29,7 @@ interface AppContextType {
   updateCartQuantity: (itemId: string, quantity: number) => Promise<void>;
   getCartCount: () => number;
   getCartAmount: () => number;
+  getToken: GetToken;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -45,25 +48,64 @@ interface AppContextProviderProps {
 
 export const AppContextProvider = (props: AppContextProviderProps) => {
   const currency = process.env.NEXT_PUBLIC_CURRENCY;
-  const {user} = useUser();
-  
-  const [products, setProducts] = useState<Product[]>([]);
+  const { user } = useUser();
+  const { getToken } = useAuth();
+
+  const [products, setProducts] = useState<ProductData[]>([]);
   const [userData, setUserData] = useState<UserData | false>(false);
   const [isSeller, setIsSeller] = useState<boolean>(true);
   const [cartItems, setCartItems] = useState<Record<string, number>>({});
 
   const fetchProductData = async () => {
-    setProducts(productsDummyData);
+    try{
+      const {data} = await axios.get('/api/product/list')
+      if(data.success)
+      {
+        setProducts(data.products);
+      }else{
+        toast.error(data.message)
+      }
+    }catch(error:any){
+      toast.error(error.message)
+    }
   };
 
   const fetchUserData = async () => {
-    setUserData(userDummyData);
+    try {
+      if (user?.publicMetadata.role === "admin") {
+        setIsSeller(true);
+      }
+      const token = await getToken();
+      const { data } = await axios.get("/api/user/data", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if(data.success) {
+        setUserData(data.user)
+        setCartItems(data.user.cartItems)
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {}
   };
 
   const addToCart = async (itemId: string) => {
     const cartData = structuredClone(cartItems);
-    cartData[itemId] = (cartData[itemId] || 0) + 1;
+    if(cartData[itemId]){
+      cartData[itemId] += 1;
+    }else{
+      cartData[itemId] = 1;
+    }
     setCartItems(cartData);
+    if(user){
+      try{
+        const token = await getToken()
+        await axios.post('/api/cart/update', {cartData},
+        {headers: {Authorization: `Bearer ${token}`}})
+        toast.success('Item added to cart')
+      }catch(error:any) {
+        toast.error(error.message)
+      }
+    }
   };
 
   const updateCartQuantity = async (itemId: string, quantity: number) => {
@@ -74,6 +116,16 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
       cartData[itemId] = quantity;
     }
     setCartItems(cartData);
+    if(user){
+      try{
+        const token = await getToken()
+        await axios.post('/api/cart/update', {cartData},
+        {headers: {Authorization: `Bearer ${token}`}})
+        toast.success('Cart updated')
+      }catch(error:any) {
+        toast.error(error.message)
+      }
+    }
   };
 
   const getCartCount = () => {
@@ -96,11 +148,14 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   }, []);
 
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]);
 
   const value: AppContextType = {
     user,
+    getToken,
     currency,
     isSeller,
     setIsSeller,
@@ -117,8 +172,6 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   };
 
   return (
-    <AppContext.Provider value={value}>
-      {props.children}
-    </AppContext.Provider>
+    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
 };

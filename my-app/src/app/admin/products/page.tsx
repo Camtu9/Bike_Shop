@@ -1,25 +1,44 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { assets, productsDummyData } from "@/assets/assets";
+import { assets} from "@/assets/assets";
 import Image from "next/image";
 import Loading from "@/components/Loading";
-import { Product } from "@/types/product";
+import { ProductData } from "@/types/product";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/context/AppContext";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const ProductList = () => {
   const router = useRouter()
+  const {getToken, user} = useAppContext();
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchSellerProduct = async () => {
-    setProducts(productsDummyData);
+    try {
+      const token = await getToken();
+      const {data} = await axios.get('/api/product/seller-list', {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      if(data.success)
+      {
+        setProducts(data.products)
     setLoading(false);
+      }else {
+        toast.error(data.message);
+      }
+    }catch(error : any) {
+      toast.error(error.message)
+    }
   };
 
   useEffect(() => {
+    if(user){
     fetchSellerProduct();
-  }, []);
+    }
+  }, [user]);
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">

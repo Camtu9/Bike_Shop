@@ -4,6 +4,7 @@ import React from 'react';
 
 interface InputProps {
   id?: string;
+  name?: string;
   type?: string;
   hidden?: boolean;
   value: string | number;
@@ -15,6 +16,7 @@ interface InputProps {
 
 const Input: React.FC<InputProps> = ({
   id,
+  name,
   type = 'text',
   value,
   onChange,
@@ -27,6 +29,7 @@ const Input: React.FC<InputProps> = ({
     <div className="flex flex-col gap-1">
       <input
         id={id}
+        name={name}
         type={type}
         value={value}
         onChange={onChange}

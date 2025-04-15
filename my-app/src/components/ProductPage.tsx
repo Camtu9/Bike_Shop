@@ -5,11 +5,11 @@ import { assets } from "@/assets/assets";
 import ProductCard from "@/components/ProductCard";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
-import type { Product } from "@/types/product";
+import type { ProductData } from "@/types/product";
 import { useRouter } from "next/navigation";
 import Button from "./Button";
 
-const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
+const ProductPage: React.FC<{ product: ProductData }> = ({ product }) => {
   const { products, addToCart } = useAppContext();
   const router = useRouter();
   const [mainImage, setMainImage] = useState<string | null>(null);
