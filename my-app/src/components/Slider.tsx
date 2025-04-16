@@ -1,8 +1,9 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
 
 interface Slide {
   id: number;
@@ -10,18 +11,21 @@ interface Slide {
   offer: string;
   buttonText1: string;
   buttonText2: string;
-  imgSrc:  StaticImageData;
+  imgSrc: StaticImageData;
+  category: string;
 }
 
 const Slider: React.FC = () => {
+  const router = useRouter();
   const sliderData: Slide[] = [
     {
       id: 1,
-      title: "Luxury & Performance – Discover Our Latest Cars!",
+      title: "Luxury & Performance – Discover Our Latest Bikes!",
       offer: "Exclusive Offer: Up to 15% Off",
-      buttonText1: "View Cars",
+      buttonText1: "View Bikes",
       buttonText2: "Learn More",
-      imgSrc: assets.header_headphone_image, 
+      imgSrc: assets.luxury_bike_image,
+      category: "Xe đạp sang trọng",
     },
     {
       id: 2,
@@ -29,7 +33,8 @@ const Slider: React.FC = () => {
       offer: "Limited Time Offer: Special Financing",
       buttonText1: "Explore Models",
       buttonText2: "Get Details",
-      imgSrc: assets.header_headphone_image,
+      imgSrc: assets.racing_bike_image,
+      category: "Xe đạp đua",
     },
     {
       id: 3,
@@ -37,7 +42,8 @@ const Slider: React.FC = () => {
       offer: "New Arrival: Latest Technology Inside",
       buttonText1: "Shop Now",
       buttonText2: "Discover More",
-      imgSrc: assets.header_headphone_image, 
+      imgSrc: assets.folding_bike_image,
+      category: "Xe đạp gấp",
     },
   ];
 
@@ -71,10 +77,20 @@ const Slider: React.FC = () => {
                 {slide.title}
               </h1>
               <div className="flex items-center mt-4 md:mt-6">
-                <button className="md:px-10 px-7 md:py-2.5 py-2 bg-orange-600 rounded-full text-white font-medium">
+                <button
+                  onClick={() =>
+                    router.push(`/category?category=${slide.category}`)
+                  }
+                  className="md:px-10 px-7 md:py-2.5 py-2 bg-orange-600 rounded-full text-white font-medium"
+                >
                   {slide.buttonText1}
                 </button>
-                <button className="group flex items-center gap-2 px-6 py-2.5 font-medium">
+                <button
+                  onClick={() =>
+                    router.push(`/category?category=${slide.category}`)
+                  }
+                  className="group flex items-center gap-2 px-6 py-2.5 font-medium"
+                >
                   {slide.buttonText2}
                   <Image
                     className="group-hover:translate-x-1 transition"

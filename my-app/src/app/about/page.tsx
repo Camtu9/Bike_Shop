@@ -14,35 +14,34 @@ const AboutPage = () => {
     <div className="font-sans">
       <section className="relative">
         <Image
-          src={assets.header_headphone_image}
+          src={assets.bike_shop_banner}
           alt="BikeZone Hero"
           className="w-full h-[500px] object-cover"
         />
         <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-start px-6 md:px-20">
-          <p className="text-white text-lg">Chào mừng đến với</p>
+          <p className="text-white text-lg">Welcome to</p>
           <h1 className="text-4xl md:text-6xl font-bold text-white">
             Bike<span className="text-orange-500">Zone</span>
           </h1>
           <h2 className="text-white text-2xl md:text-3xl mt-2">
-            Cửa hàng xe đạp hàng đầu Việt Nam
+            Vietnam&apos;s leading bicycle store
           </h2>
           <p className="text-white mt-4 max-w-xl">
-            Từ xe đạp thể thao đến xe đạp đường phố, chúng tôi mang đến cho bạn
-            trải nghiệm đạp xe hoàn hảo nhất.
+            From mountain bikes to city bikes, we bring you the best cycling experience.
           </p>
           <div className="mt-6 flex gap-4">
             <Button
               className="px-6 py-2"
               onClick={() => router.push("/all-products")}
             >
-              Xem thêm
+              Learn more
             </Button>
             <Button
               variant="secondary"
               className="px-6 py-2 whitespace-nowrap"
               onClick={() => router.push("/all-products")}
             >
-              Khám phá sản phẩm
+              Explore products
             </Button>
           </div>
         </div>
@@ -56,32 +55,23 @@ const AboutPage = () => {
         {/* Section 1 */}
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <Image
-            src={assets.header_headphone_image}
-            alt="Lịch sử BikeZone"
+            src={assets.bike_shop_image}
+            alt="BikeZone History"
             className="rounded-xl shadow-lg"
           />
           <div>
             <h2 className="text-3xl font-semibold mb-4">
-              Lịch sử của <span className="text-orange-500">BikeZone</span>
+              The story of <span className="text-orange-500">BikeZone</span>
             </h2>
             <p className="text-gray-600 leading-relaxed mb-6">
-              Từ năm 2010, chúng tôi đã cung cấp hàng nghìn chiếc xe đạp chất
-              lượng cho cộng đồng yêu xe trên toàn quốc. Với sứ mệnh đưa văn hóa
-              đạp xe đến gần hơn với mọi người, BikeZone không ngừng phát triển
-              cả về sản phẩm lẫn dịch vụ.
+              Since 2010, we have supplied thousands of high-quality bicycles to cycling enthusiasts across the country. With a mission to bring the cycling culture closer to everyone, BikeZone continues to grow in both products and services.
               {showMore1 && (
                 <div className="mt-4 text-gray-600 leading-relaxed animate-fade-in">
                   <p>
-                    Chúng tôi khởi đầu từ một cửa hàng nhỏ tại Hà Nội, nơi niềm
-                    đam mê xe đạp được nuôi dưỡng mỗi ngày. Trải qua hơn một
-                    thập kỷ, chúng tôi đã phát triển thành chuỗi cửa hàng và
-                    cộng đồng yêu xe phủ khắp cả nước.
+                    We started as a small shop in Hanoi, where our passion for bikes was nurtured daily. Over more than a decade, we&apos;ve grown into a nationwide chain of stores and communities.
                   </p>
                   <p className="mt-2">
-                    Không chỉ đơn thuần là kinh doanh, chúng tôi tạo ra không
-                    gian cho những người yêu thích đạp xe cùng nhau chia sẻ kinh
-                    nghiệm, tổ chức sự kiện và truyền cảm hứng sống tích cực mỗi
-                    ngày.
+                    Beyond business, we aim to create a space for bike lovers to share experiences, organize events, and inspire a positive lifestyle every day.
                   </p>
                 </div>
               )}
@@ -91,7 +81,7 @@ const AboutPage = () => {
               variant={showMore1 ? "secondary" : "primary"}
               onClick={() => setShowMore1(!showMore1)}
             >
-              {showMore1 ? "Ẩn bớt" : "Đọc thêm"}
+              {showMore1 ? "Show less" : "Read more"}
             </Button>
           </div>
         </div>
@@ -100,24 +90,17 @@ const AboutPage = () => {
         <div className="grid md:grid-cols-2 gap-10 items-center mt-20">
           <div>
             <h2 className="text-3xl font-semibold mb-4">
-              Vì sao chọn chúng tôi?
+              Why choose us?
             </h2>
             <p className="text-gray-600 leading-relaxed mb-6">
-              Chúng tôi không chỉ bán xe – chúng tôi mang đến phong cách sống
-              năng động và bền vững. Với đội ngũ chuyên nghiệp và dịch vụ tận
-              tâm, BikeZone là điểm đến lý tưởng cho những ai yêu thích xe đạp.
+              We&apos;re not just selling bikes – we promote a dynamic and sustainable lifestyle. With a professional team and dedicated service, BikeZone is the ideal destination for cycling enthusiasts.
               {showMore2 && (
                 <div className="mt-4 text-gray-600 leading-relaxed animate-fade-in">
                   <p>
-                    Tại BikeZone, chúng tôi cung cấp các dịch vụ hậu mãi như bảo
-                    hành, bảo trì định kỳ, fitting xe theo cơ thể và phong cách
-                    đạp. Bạn sẽ luôn nhận được sự tư vấn tận tình từ đội ngũ am
-                    hiểu và đam mê xe đạp.
+                    At BikeZone, we offer after-sales services like warranty, regular maintenance, bike fitting based on body type and riding style. You&apos;ll always receive attentive advice from our passionate and knowledgeable team.
                   </p>
                   <p className="mt-2">
-                    Hơn cả một cửa hàng, BikeZone là một cộng đồng – nơi bạn có
-                    thể tham gia tour đạp xe, workshop kỹ thuật, hoặc đơn giản
-                    là gặp gỡ những người có cùng đam mê.
+                    More than just a store, BikeZone is a community – where you can join cycling tours, technical workshops, or simply connect with fellow enthusiasts.
                   </p>
                 </div>
               )}
@@ -127,12 +110,12 @@ const AboutPage = () => {
               variant={showMore2 ? "secondary" : "primary"}
               onClick={() => setShowMore2(!showMore2)}
             >
-              {showMore2 ? "Ẩn bớt" : "Đọc thêm"}
+              {showMore2 ? "Show less" : "Read more"}
             </Button>
           </div>
           <Image
-            src={assets.header_headphone_image}
-            alt="Tại sao chọn BikeZone"
+            src={assets.group_outdoor_image}
+            alt="Why choose BikeZone"
             className="rounded-xl shadow-lg"
           />
         </div>
@@ -141,37 +124,36 @@ const AboutPage = () => {
       <section className="bg-orange-500 py-10 text-white text-center grid grid-cols-2 sm:grid-cols-4 gap-6 text-lg font-medium">
         <div>
           <p className="text-3xl font-bold">10+</p>
-          <p>Năm hoạt động</p>
+          <p>Years of operation</p>
         </div>
         <div>
           <p className="text-3xl font-bold">500+</p>
-          <p>Sản phẩm</p>
+          <p>Products</p>
         </div>
         <div>
           <p className="text-3xl font-bold">200+</p>
-          <p>Khách hàng thân thiết</p>
+          <p>Loyal customers</p>
         </div>
         <div>
           <p className="text-3xl font-bold">99%</p>
-          <p>Hài lòng</p>
+          <p>Satisfaction</p>
         </div>
       </section>
 
       {/* Services Section */}
       <section className="max-w-7xl mx-auto px-4 py-20 text-center">
         <h2 className="text-3xl md:text-4xl font-semibold">
-          Khám phá <span className="text-orange-500">Dịch vụ</span> của chúng
-          tôi
+          Discover our <span className="text-orange-500">services</span>
         </h2>
         <div className="w-20 h-0.5 bg-orange-500 mx-auto mt-3 mb-10" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { title: "Bảo dưỡng & sửa chữa", icon: assets.repair_icon },
-            { title: "Cho thuê xe đạp", icon: assets.rent_icon },
-            { title: "Tư vấn & fitting xe", icon: assets.fit_icon },
-            { title: "Phụ kiện & đồ chơi", icon: assets.accessory_icon },
-            { title: "Tour xe đạp", icon: assets.tour_icon },
-            { title: "Workshop cộng đồng", icon: assets.event_icon },
+            { title: "Maintenance & Repair", icon: assets.repair_icon },
+            { title: "Bike Rentals", icon: assets.rent_icon },
+            { title: "Consultation & Fitting", icon: assets.fit_icon },
+            { title: "Accessories & Gear", icon: assets.accessory_icon },
+            { title: "Cycling Tours", icon: assets.tour_icon },
+            { title: "Community Workshops", icon: assets.event_icon },
           ].map(({ title, icon }, i) => (
             <div
               key={i}
@@ -186,11 +168,11 @@ const AboutPage = () => {
               />
               <h3 className="font-semibold text-lg text-orange-500">{title}</h3>
               <p className="text-sm text-gray-500 mt-4">
-                {title === "Cho thuê xe đạp"
-                  ? "Thuê xe theo giờ, ngày hoặc tuần với chi phí cực kỳ hợp lý."
-                  : title === "Tour xe đạp"
-                  ? "Khám phá hành trình tuyệt đẹp cùng cộng đồng yêu xe đạp."
-                  : "Dịch vụ chuyên nghiệp, đồng hành cùng bạn trên mọi hành trình."}
+                {title === "Bike Rentals"
+                  ? "Rent bikes by hour, day, or week at very affordable prices."
+                  : title === "Cycling Tours"
+                  ? "Discover beautiful routes with our cycling community."
+                  : "Professional services that support your cycling journey."}
               </p>
             </div>
           ))}
@@ -200,7 +182,7 @@ const AboutPage = () => {
       {/* Testimonials */}
       <section className="bg-gray-100 py-20 text-center">
         <h2 className="text-3xl font-semibold">
-          Khách hàng <span className="text-orange-500">nói gì?</span>
+          What do customers <span className="text-orange-500">say?</span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-12 px-4">
           {[
@@ -244,3 +226,4 @@ const AboutPage = () => {
 };
 
 export default AboutPage;
+

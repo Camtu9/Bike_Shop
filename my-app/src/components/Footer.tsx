@@ -35,11 +35,6 @@ const Footer: React.FC = () => {
                   About Us
                 </a>
               </li>
-              <li>
-                <a className="hover:underline transition" href="#">
-                  Contact
-                </a>
-              </li>
             </ul>
           </div>
         </div>

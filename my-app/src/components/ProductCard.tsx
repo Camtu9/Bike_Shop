@@ -29,9 +29,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center overflow-hidden">
         <Image
-          src={product.image[0]} 
+          src={product.image[0]}
           alt={product.name}
-          className="group-hover:scale-105 transition object-cover w-4/5 h-4/5 md:w-full md:h-full"
+          className="group-hover:scale-105 transition w-full"
           width={800}
           height={800}
         />
@@ -60,9 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               key={index}
               className="h-3 w-3"
               src={
-                index < Math.floor(4)
-                  ? assets.star_icon
-                  : assets.star_dull_icon
+                index < Math.floor(4) ? assets.star_icon : assets.star_dull_icon
               }
               alt="star_icon"
             />

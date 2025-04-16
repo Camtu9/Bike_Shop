@@ -30,6 +30,17 @@ import accessory_icon from "./accessory_icon.png";
 import tour_icon from "./tour_icon.png";
 import event_icon from "./event_icon.png";
 import fit_icon from "./fit_icon.png";
+import luxury_bike_image from "./luxury_bike_image.png";
+import racing_bike_image from "./racing_bike_image.png";
+import folding_bike_image from "./folding_bike_image.png";
+import mountain_bike_image from "./mountain_bike_image.jpg"
+import city_bike_image from "./city_bike_image.png";
+import classic_bike_image from "./classic_bike_image.png";
+import tour_bike_image from "./tour_bike_image.png";
+import road_bike_image from "./road_bike_image.png";
+import bike_shop_image from "./bike_shop_image.jpg";
+import bike_shop_banner from "./bike_shop_banner.png";
+import group_outdoor_image from "./group_outdoor_image.jpg";
 
 export const assets = {
   search_icon,
@@ -64,6 +75,17 @@ export const assets = {
   tour_icon,
   event_icon,
   fit_icon,
+  luxury_bike_image,
+  racing_bike_image,
+  folding_bike_image,
+  mountain_bike_image,
+  city_bike_image,
+  classic_bike_image,
+  tour_bike_image,
+  road_bike_image,
+  bike_shop_image,
+  bike_shop_banner,
+  group_outdoor_image
 };
 
 export const CartIcon = () => {
