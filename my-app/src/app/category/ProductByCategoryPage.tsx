@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import { ProductData } from "@/types/product";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Loading from "@/components/Loading";
 
 const ProductsByCategoryPage: React.FC = () => {
   const searchParams = useSearchParams();
@@ -45,7 +46,7 @@ const ProductsByCategoryPage: React.FC = () => {
       </div>
 
       {loading ? (
-        <p className="text-center mt-10 text-gray-500">Loading...</p>
+        <Loading/>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-12 pb-14 w-full">
           {products.length > 0 ? (

@@ -8,12 +8,11 @@ import { useAppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
 
 const Cart: React.FC = () => {
-  const { products, cartItems, addToCart, updateCartQuantity, getCartCount } = useAppContext();
+  const { products, cartItems, addToCart, updateCartQuantity, getCartCount, formatCurrency } = useAppContext();
   const router = useRouter();
 
   return (
       <div className="flex flex-col md:flex-row gap-10 px-6 md:px-16 lg:px-32 pt-14 mb-20">
-        {/* Cart Info */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-8 border-b border-gray-500/30 pb-6">
             <p className="text-2xl md:text-3xl text-gray-500">
@@ -22,7 +21,6 @@ const Cart: React.FC = () => {
             <p className="text-lg md:text-xl text-gray-500/80">{getCartCount()} Items</p>
           </div>
 
-          {/* Cart Table */}
           <div className="overflow-x-auto">
             <table className="min-w-full table-auto">
               <thead className="text-left">
@@ -75,7 +73,7 @@ const Cart: React.FC = () => {
 
                       {/* Price */}
                       <td className="py-4 px-1 md:px-4 text-gray-600">
-                        ${product.offerPrice.toFixed(2)}
+                        ${formatCurrency(product.offerPrice)}
                       </td>
 
                       {/* Quantity Controls */}
@@ -99,7 +97,7 @@ const Cart: React.FC = () => {
 
                       {/* Subtotal */}
                       <td className="py-4 px-1 md:px-4 text-gray-600">
-                        ${subtotal.toFixed(2)}
+                        {formatCurrency(subtotal)}
                       </td>
                     </tr>
                   );

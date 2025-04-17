@@ -9,7 +9,7 @@ import { assets } from "@/assets/assets";
 import Button from "@/components/Button";
 
 const ProductPage: React.FC = () => {
-  const { products, addToCart } = useAppContext();
+  const { products, addToCart, formatCurrency } = useAppContext();
   const router = useRouter();
   const [productData, setProductData] = useState<ProductData>();
   const [mainImage, setMainImage] = useState<string | null>(null);
@@ -87,7 +87,7 @@ const ProductPage: React.FC = () => {
           <p className="text-3xl font-medium mt-6">
             ${productData?.offerPrice}
             <span className="text-base font-normal text-gray-800/60 line-through ml-2">
-              ${productData?.price}
+              ${formatCurrency(productData?.price)}
             </span>
           </p>
 

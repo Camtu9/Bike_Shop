@@ -9,6 +9,7 @@ import {
   useEffect,
   useState,
   ReactNode,
+  useRef,
 } from "react";
 import { GetToken } from "@clerk/types";
 import axios from "axios";
@@ -30,6 +31,7 @@ interface AppContextType {
   getCartCount: () => number;
   getCartAmount: () => number;
   getToken: GetToken;
+  formatCurrency: (amount: number) => ReactNode;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -50,11 +52,20 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   const currency = process.env.NEXT_PUBLIC_CURRENCY;
   const { user } = useUser();
   const { getToken } = useAuth();
+  const prevUserRef = useRef<any>(null);
 
   const [products, setProducts] = useState<ProductData[]>([]);
   const [userData, setUserData] = useState<UserData | false>(false);
   const [isSeller, setIsSeller] = useState<boolean>(true);
   const [cartItems, setCartItems] = useState<Record<string, number>>({});
+
+  const formatCurrency = (amount: number) => {
+    return amount.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+      minimumFractionDigits: 0,
+    });
+  };
 
   const fetchProductData = async () => {
     try {
@@ -176,6 +187,7 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
     updateCartQuantity,
     getCartCount,
     getCartAmount,
+    formatCurrency,
   };
 
   return (

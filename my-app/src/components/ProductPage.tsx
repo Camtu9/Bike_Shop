@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import Button from "./Button";
 
 const ProductPage: React.FC<{ product: ProductData }> = ({ product }) => {
-  const { products, addToCart } = useAppContext();
+  const { products, addToCart, formatCurrency } = useAppContext();
   const router = useRouter();
   const [mainImage, setMainImage] = useState<string | null>(null);
 
@@ -73,9 +73,9 @@ const ProductPage: React.FC<{ product: ProductData }> = ({ product }) => {
             </div>
             <p className="text-gray-600 mt-3">{product.description}</p>
             <p className="text-3xl font-medium mt-6">
-              ${product.offerPrice}
+              ${formatCurrency(product.offerPrice)}
               <span className="text-base font-normal text-gray-800/60 line-through ml-2">
-                ${product.price}
+                ${formatCurrency(product.price)}
               </span>
             </p>
 

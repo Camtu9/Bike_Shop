@@ -12,7 +12,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { currency } = useAppContext();
+  const { formatCurrency } = useAppContext();
   const router = useRouter();
 
   const discountPercent = Math.round(
@@ -71,12 +71,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="flex items-end justify-between w-full mt-1">
         <div className="flex flex-col">
           <p className="text-base font-semibold text-red-500">
-            {currency}
-            {product.offerPrice}
+            {formatCurrency(product.offerPrice)}
           </p>
           <p className="text-xs text-gray-400 line-through">
-            {currency}
-            {product.price}
+            {formatCurrency(product.price)}
           </p>
         </div>
         <button className="max-sm:hidden px-4 py-1.5 text-gray-500 border border-gray-500/20 rounded-full text-xs hover:bg-slate-50 transition">

@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 
 const ProductList = () => {
   const router = useRouter();
-  const { getToken, user } = useAppContext();
+  const { getToken, user, formatCurrency } = useAppContext();
 
   const [products, setProducts] = useState<ProductData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -86,8 +86,8 @@ const ProductList = () => {
                     <td className="px-4 py-3">{product.category}</td>
                     <td className="px-4 py-3">{product.brand}</td>
                     <td className="px-4 py-3">{product.stock}</td>
-                    <td className="px-4 py-3">${product.price}</td>
-                    <td className="px-4 py-3">${product.offerPrice}</td>
+                    <td className="px-4 py-3">${formatCurrency(product.price)}</td>
+                    <td className="px-4 py-3">${formatCurrency(product.offerPrice)}</td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => router.push(`/product/${product._id}`)}

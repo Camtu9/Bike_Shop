@@ -1,6 +1,13 @@
 "use client";
 import React from "react";
-import { AboutUsIcon, assets, BagIcon, CartIcon, HomeIcon, ShopIcon } from "@/assets/assets";
+import {
+  AboutUsIcon,
+  assets,
+  BagIcon,
+  CartIcon,
+  HomeIcon,
+  ShopIcon,
+} from "@/assets/assets";
 import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
@@ -33,7 +40,7 @@ const Navbar: React.FC = () => {
         {isSeller && (
           <button
             onClick={() => router.push("/admin")}
-            className="text-xs border px-4 py-1.5 rounded-full"
+            className="text-xs border border-gray-600 px-4 py-1.5 rounded-full"
           >
             Dashboard
           </button>
@@ -41,7 +48,22 @@ const Navbar: React.FC = () => {
       </div>
 
       <ul className="hidden md:flex items-center gap-4">
-        <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
+        {/* <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" /> */}
+        <form action="/search" className="relative hidden md:flex items-center">
+          <input
+            type="text"
+            name="name"
+            placeholder="Search products..."
+            className="pl-4 pr-8 py-2 rounded-full border border-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+          <button type="submit" className="absolute right-3">
+            <Image
+              className="w-4 h-4"
+              src={assets.search_icon}
+              alt="search icon"
+            />
+          </button>
+        </form>
         {user ? (
           <UserButton>
             <UserButton.MenuItems>
@@ -80,7 +102,7 @@ const Navbar: React.FC = () => {
         {user ? (
           <UserButton>
             <UserButton.MenuItems>
-            <UserButton.Action
+              <UserButton.Action
                 label="Home"
                 labelIcon={<HomeIcon />}
                 onClick={() => router.push("/")}

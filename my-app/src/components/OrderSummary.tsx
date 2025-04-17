@@ -7,10 +7,11 @@ import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useClerk } from "@clerk/nextjs";
 
 const OrderSummary: React.FC = () => {
   const {
-    currency,
+    formatCurrency,
     getCartCount,
     getCartAmount,
     getToken,
@@ -19,6 +20,7 @@ const OrderSummary: React.FC = () => {
     user,
   } = useAppContext();
   const router = useRouter();
+  const { openSignIn } = useClerk();
 
   const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
     null
@@ -52,6 +54,10 @@ const OrderSummary: React.FC = () => {
 
   const createOrder = async () => {
     try {
+      if (!user) {
+        openSignIn();
+        return toast.error("You must be logged in to place an order");
+      }
       if (!selectedAddress) {
         return toast.error("Please select an address");
       }
@@ -68,7 +74,7 @@ const OrderSummary: React.FC = () => {
 
       const token = await getToken();
       const { data } = await axios.post(
-        "/api/create",
+        "/api/order/create",
         { address: selectedAddress._id, items: cartItemsArray },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -171,28 +177,19 @@ const OrderSummary: React.FC = () => {
         <div className="space-y-4">
           <div className="flex justify-between text-base font-medium">
             <p className="uppercase text-gray-600">Items {getCartCount()}</p>
-            <p className="text-gray-800">
-              {currency}
-              {getCartAmount()}
-            </p>
+            <p className="text-gray-800">{formatCurrency(getCartAmount())}</p>
           </div>
           <div className="flex justify-between">
             <p className="text-gray-600">Shipping Fee</p>
-            <p className="font-medium text-gray-800">Free</p>
+            <p className="font-medium text-gray-800">{formatCurrency(50000)}</p>
           </div>
           <div className="flex justify-between">
-            <p className="text-gray-600">Tax (2%)</p>
-            <p className="font-medium text-gray-800">
-              {currency}
-              {Math.floor(getCartAmount() * 0.02)}
-            </p>
+            <p className="text-gray-600">Tax (0%)</p>
+            <p className="font-medium text-gray-800">0</p>
           </div>
           <div className="flex justify-between text-lg md:text-xl font-medium border-t pt-3">
             <p>Total</p>
-            <p>
-              {currency}
-              {getCartAmount() + Math.floor(getCartAmount() * 0.02)}
-            </p>
+            <p>{formatCurrency(getCartAmount() + 50000)}</p>
           </div>
         </div>
       </div>

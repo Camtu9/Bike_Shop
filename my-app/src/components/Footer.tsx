@@ -1,13 +1,18 @@
 import React from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
     <footer>
-      <div className="flex flex-col md:flex-row items-start justify-center px-6 md:px-16 lg:px-32 gap-10 py-14 border-b border-gray-500/30 text-gray-500 bg-gray-100">
+      <div className="shadow-sm border-t flex flex-col md:flex-row items-start justify-center px-6 md:px-16 lg:px-32 gap-10 py-14 border-b border-gray-500/30 text-gray-500 bg-gray-100">
         <div className="w-4/5">
-          <Image className="w-28 md:w-32" src={assets.logo} alt="BikeZone Logo" />
+          <Image
+            className="w-28 md:w-32"
+            src={assets.logo}
+            alt="BikeZone Logo"
+          />
           <p className="mt-6 text-sm">
             Welcome to BikeZone – your ultimate destination for high-quality
             bicycles and cycling accessories. Discover a wide range of bikes
@@ -21,19 +26,19 @@ const Footer: React.FC = () => {
             <h2 className="font-medium text-gray-900 mb-5">Company</h2>
             <ul className="text-sm space-y-2">
               <li>
-                <a className="hover:underline transition" href="#">
+                <Link className="hover:underline transition" href="/">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="hover:underline transition" href="#">
+                <Link className="hover:underline transition" href="/all-products">
                   Bicycles
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="hover:underline transition" href="#">
+                <Link className="hover:underline transition" href="/about">
                   About Us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
