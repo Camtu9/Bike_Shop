@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
         const orders = await Order.find({userId}).populate('address items.product')
 
         return NextResponse.json({success: true, orders})
-    }catch(error:any)
+    }catch(error:any )
     {
         return NextResponse.json({success: false, message:error.message})
     }
