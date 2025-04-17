@@ -6,7 +6,7 @@ import Link from "next/link";
 const Footer: React.FC = () => {
   return (
     <footer>
-      <div className="shadow-sm border-t flex flex-col md:flex-row items-start justify-center px-6 md:px-16 lg:px-32 gap-10 py-14 border-b border-gray-500/30 text-gray-500 bg-gray-100">
+      <div className="shadow-sm border-t flex flex-col md:flex-row items-start justify-center px-6 md:px-16 lg:px-32 gap-10 py-14 border-b border-gray-500/30 text-gray-500 bg-gray-100 mt-4">
         <div className="w-4/5">
           <Image
             className="w-28 md:w-32"

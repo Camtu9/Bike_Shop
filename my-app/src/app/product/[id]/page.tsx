@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { assets } from "@/assets/assets";
 import Button from "@/components/Button";
+import axios from "axios";
 
 const ProductPage: React.FC = () => {
   const { products, addToCart, formatCurrency } = useAppContext();
@@ -14,6 +15,7 @@ const ProductPage: React.FC = () => {
   const [productData, setProductData] = useState<ProductData>();
   const [mainImage, setMainImage] = useState<string | null>(null);
   const { id } = useParams();
+  const [relatedProducts, setRelatedProducts] = useState<ProductData[]>([]);
 
   const fetchProductData = async () => {
     const product = products.find((product) => product._id === id);
@@ -24,7 +26,27 @@ const ProductPage: React.FC = () => {
     fetchProductData();
   }, [id, products.length]);
 
-  if(!productData) return;
+  useEffect(() => {
+    const fetchRelatedProducts = async () => {
+      if (!productData?.category) return;
+      try {
+        const { data } = await axios.get(
+          `/api/product/search-by-category?category=${productData.category}`
+        );
+        if (data.success) {
+          const filtered = data.products.filter(
+            (p: ProductData) => p._id !== productData._id
+          );
+          setRelatedProducts(filtered);
+        }
+      } catch (error: any) {
+        console.error("Failed to fetch related products:", error.message);
+      }
+    };
+
+    fetchRelatedProducts();
+  }, [productData]);
+  if (!productData) return;
 
   return (
     <div className="px-6 md:px-16 lg:px-32 pt-14 space-y-10">
@@ -85,12 +107,14 @@ const ProductPage: React.FC = () => {
           </div>
           <p className="text-gray-600 mt-3">{productData?.description}</p>
           <p className="text-3xl font-medium mt-6">
-            ${productData?.offerPrice}
-            <span className="text-base font-normal text-gray-800/60 line-through ml-2">
-              ${formatCurrency(productData?.price)}
-            </span>
+            {formatCurrency(productData?.offerPrice)}
+            {productData?.price !== productData?.offerPrice && (
+              <span className="text-base font-normal text-gray-800/60 line-through ml-2">
+                {formatCurrency(productData?.price)}
+              </span>
+            )}
           </p>
-
+          
           <hr className="bg-gray-600 my-6" />
 
           <table className="table-auto border-collapse w-full max-w-72">
@@ -133,23 +157,32 @@ const ProductPage: React.FC = () => {
       </div>
 
       {/* Featured Products */}
-      <div className="flex flex-col items-center">
-        <div className="flex flex-col items-center mb-4 mt-16">
-          <p className="text-3xl font-medium">
-            Featured{" "}
-            <span className="font-medium text-orange-600">Products</span>
-          </p>
-          <div className="w-28 h-0.5 bg-orange-600 mt-2" />
+      {relatedProducts.length > 0 && (
+        <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center mb-4 mt-16">
+            <p className="text-3xl font-medium">
+              Featured{" "}
+              <span className="font-medium text-orange-600">Products</span>
+            </p>
+            <div className="w-28 h-0.5 bg-orange-600 mt-2" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-14 w-full">
+            {relatedProducts.slice(0, 5).map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+          {relatedProducts.length > 5 && (
+            <button
+              onClick={() =>
+                router.push(`/category?category=${productData.category}`)
+              }
+              className="px-8 py-2 mb-16 border rounded text-gray-500/70 hover:bg-slate-50/90 transition"
+            >
+              See more
+            </button>
+          )}
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-14 w-full">
-          {products.slice(0, 5).map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-        <button className="px-8 py-2 mb-16 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
-          See more
-        </button>
-      </div>
+      )}
     </div>
   );
 };
