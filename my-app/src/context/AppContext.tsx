@@ -18,7 +18,7 @@ interface AppContextType {
   currency: string | undefined;
   isSeller: boolean;
   setIsSeller: (value: boolean) => void;
-  userData: UserData | false;
+  userData: UserData | null;
   setUserData: (userData: UserData) => void;
   fetchUserData: () => Promise<void>;
   products: ProductData[];
@@ -60,7 +60,7 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   const prevUserRef = useRef<any>(null);
 
   const [products, setProducts] = useState<ProductData[]>([]);
-  const [userData, setUserData] = useState<UserData | false>(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [isSeller, setIsSeller] = useState<boolean>(true);
   const [cartItems, setCartItems] = useState<Record<string, number>>({});
   const [token, setToken] = useState<string | undefined>(undefined);
@@ -90,7 +90,7 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   const signOut = () => {
     localStorage.removeItem("token");
     setToken(undefined);
-    setUserData(false);
+    setUserData(null);
     setIsSeller(false);
   };
 
