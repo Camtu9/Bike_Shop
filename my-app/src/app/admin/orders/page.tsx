@@ -9,13 +9,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Orders = () => {
-  const { currency, getToken, user } = useAppContext();
+  const { currency, token, userData } = useAppContext();
   const [orders, setOrders] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchSellerOrders = async () => {
     try {
-      const token = await getToken();
       const { data } = await axios.get("/api/order/seller-orders", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -31,10 +30,10 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       fetchSellerOrders();
     }
-  }, [user]);
+  }, [userData]);
 
   return (
     <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">

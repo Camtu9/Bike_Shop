@@ -1,9 +1,9 @@
 import authSeller from "@/lib/authSeller";
-import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "../../../../../config/db";
 import Product from "@/models/Product";
+import { getCurrentUser } from "@/lib/auth";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,8 +13,8 @@ cloudinary.config({
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
-    const isSeller = await authSeller(userId!);
+    const currentUser = await getCurrentUser(request);
+    const isSeller = await authSeller(currentUser.id!);
     if (!isSeller) {
       return NextResponse.json({ success: false, message: "Not authorized" });
     }

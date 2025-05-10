@@ -10,7 +10,7 @@ import Image from "next/image";
 import Loading from "@/components/Loading";
 
 const OrderDetail = () => {
-  const { getToken, formatCurrency } = useAppContext();
+  const { token, formatCurrency } = useAppContext();
   const { id } = useParams();
   const [order, setOrder] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,6 @@ const OrderDetail = () => {
 
   const fetchOrder = async () => {
     try {
-      const token = await getToken();
       const { data } = await axios.get(`/api/order/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });

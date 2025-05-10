@@ -1,14 +1,13 @@
-import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/Product";
-import { inngest } from "../../../../../config/inngest";
 import User from "@/models/User";
 import Order from "@/models/Order";
 import connectDB from "../../../../../config/db";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
+    const currentUser = await getCurrentUser(request);
     const { address, items } = await request.json();
 
     await connectDB();
@@ -36,25 +35,15 @@ export async function POST(request: NextRequest) {
 
     const amount = amountArray.reduce((acc, val) => acc + val, 0);
     const newOrder = await Order.create({
-      userId,
+      userId: currentUser.id,
       address,
       items,
       amount: amount + 50000,
       status: "Order placed",
       date: Date.now(),
     });
-    await inngest.send({
-      name: "clerk/order.created",
-      data: {
-        userId,
-        address,
-        items,
-        amount: amount + 50000,
-        date: Date.now(),
-      },
-    });
 
-    const user = await User.findById(userId);
+    const user = await User.findById(currentUser.id);
     user.cartItems = {};
     await user.save();
     

@@ -7,20 +7,19 @@ import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useClerk } from "@clerk/nextjs";
 
 const OrderSummary: React.FC = () => {
   const {
     formatCurrency,
     getCartCount,
     getCartAmount,
-    getToken,
+    token,
     cartItems,
     setCartItems,
-    user,
+    userData,
+    openSignIn
   } = useAppContext();
   const router = useRouter();
-  const { openSignIn } = useClerk();
 
   const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
     null
@@ -30,7 +29,7 @@ const OrderSummary: React.FC = () => {
 
   const fetchUserAddresses = async () => {
     try {
-      const token = await getToken();
+
       const { data } = await axios.get("/api/user/get-address", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -54,7 +53,7 @@ const OrderSummary: React.FC = () => {
 
   const createOrder = async () => {
     try {
-      if (!user) {
+      if (!userData) {
         openSignIn();
         return toast.error("You must be logged in to place an order");
       }
@@ -72,7 +71,6 @@ const OrderSummary: React.FC = () => {
         return toast.error("Cart is empty");
       }
 
-      const token = await getToken();
       const { data } = await axios.post(
         "/api/order/create",
         { address: selectedAddress._id, items: cartItemsArray },
@@ -89,10 +87,10 @@ const OrderSummary: React.FC = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       fetchUserAddresses();
     }
-  }, [user]);
+  }, [userData]);
 
   return (
     <div className="w-full md:w-96 bg-gray-500/5 p-5">

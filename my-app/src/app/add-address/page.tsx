@@ -13,13 +13,12 @@ import toast from "react-hot-toast";
 
 export type AddressInput = Omit<AddressData, "_id" | "__v" | "userId">;
 const AddAddress = () => {
-  const { getToken } = useAppContext();
+  const { token } = useAppContext();
   const router = useRouter();
 
   const [address, setAddress] = useState<AddressInput>({
     fullName: "",
     phoneNumber: "",
-    pincode: 0,
     area: "",
     city: "",
     state: "",
@@ -39,7 +38,6 @@ const AddAddress = () => {
   const onSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const token = await getToken();
       const { data } = await axios.post(
         "/api/user/add-address",
         { address },
@@ -78,13 +76,6 @@ const AddAddress = () => {
             placeholder="Phone number"
             onChange={onChangeHandler}
             value={address.phoneNumber}
-          />
-          <Input
-            name="pincode"
-            type="number"
-            placeholder="Pin code"
-            onChange={onChangeHandler}
-            value={address.pincode}
           />
           <textarea
             name="area"
