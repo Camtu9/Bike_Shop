@@ -30,7 +30,7 @@ const AddProduct = () => {
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
   const [stock, setStock] = useState("");
-  const { getToken } = useAppContext();
+  const { token } = useAppContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +47,6 @@ const AddProduct = () => {
       formData.append("image", files[i]);
     }
     try {
-      const token = await getToken();
       const { data } = await axios.post("/api/product/add", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });

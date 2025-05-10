@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
 import connectDB from "../../../../../config/db";
 import Order from "@/models/Order";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
-    const { userId } = getAuth(request);
+    const currentUser = await getCurrentUser(request);
 
     const pathname = request.nextUrl.pathname;
     const orderId = pathname.split("/").pop();
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const order = await Order.findOne({ _id: orderId, userId }).populate(
+    const order = await Order.findOne({ _id: orderId, userId: currentUser.id }).populate(
       "items.product address"
     );
 

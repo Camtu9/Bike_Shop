@@ -12,14 +12,12 @@ import { useRouter } from "next/navigation";
 
 const Orders: React.FC = () => {
   const router = useRouter();
-  const { formatCurrency, getToken, user } = useAppContext();
+  const { formatCurrency, token, userData } = useAppContext();
   const [orders, setOrders] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchOrders = async () => {
     try {
-      const token = await getToken();
-
       const { data } = await axios.get("/api/order/list", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -35,10 +33,10 @@ const Orders: React.FC = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       fetchOrders();
     }
-  }, [user]);
+  }, [userData]);
 
   return (
     <div className="flex flex-col justify-between px-6 md:px-16 lg:px-32 py-6 min-h-screen">

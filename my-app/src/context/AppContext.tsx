@@ -2,7 +2,6 @@
 
 import { ProductData } from "@/types/product";
 import { UserData } from "@/types/user";
-import { useAuth, useUser } from "@clerk/nextjs";
 import {
   createContext,
   useContext,
@@ -11,16 +10,16 @@ import {
   ReactNode,
   useRef,
 } from "react";
-import { GetToken } from "@clerk/types";
+
 import axios from "axios";
 import toast from "react-hot-toast";
 
 interface AppContextType {
-  user: ReturnType<typeof useUser>["user"];
   currency: string | undefined;
   isSeller: boolean;
   setIsSeller: (value: boolean) => void;
-  userData: UserData | false;
+  userData: UserData | null;
+  setUserData: (userData: UserData) => void;
   fetchUserData: () => Promise<void>;
   products: ProductData[];
   fetchProductData: () => Promise<void>;
@@ -30,8 +29,15 @@ interface AppContextType {
   updateCartQuantity: (itemId: string, quantity: number) => Promise<void>;
   getCartCount: () => number;
   getCartAmount: () => number;
-  getToken: GetToken;
+  token: string | undefined;
   formatCurrency: (amount: number) => ReactNode;
+  signIn: (user: any) => void;
+  signOut: () => void;
+  openSignIn: () => void;
+  openSignUp: () => void;
+  closeModals: () => void;
+  showSignIn: boolean;
+  showSignUp: boolean;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -50,14 +56,50 @@ interface AppContextProviderProps {
 
 export const AppContextProvider = (props: AppContextProviderProps) => {
   const currency = process.env.NEXT_PUBLIC_CURRENCY;
-  const { user } = useUser();
-  const { getToken } = useAuth();
+
   const prevUserRef = useRef<any>(null);
 
   const [products, setProducts] = useState<ProductData[]>([]);
-  const [userData, setUserData] = useState<UserData | false>(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [isSeller, setIsSeller] = useState<boolean>(true);
   const [cartItems, setCartItems] = useState<Record<string, number>>({});
+  const [token, setToken] = useState<string | undefined>(undefined);
+  const [showSignIn, setShowSignIn] = useState<boolean>(false);
+  const [showSignUp, setShowSignUp] = useState<boolean>(false);
+
+  const openSignIn = () => {
+    setShowSignUp(false);
+    setShowSignIn(true);
+  };
+
+  const openSignUp = () => {
+    setShowSignIn(false);
+    setShowSignUp(true);
+  };
+
+  const closeModals = () => {
+    setShowSignIn(false);
+    setShowSignUp(false);
+  };
+  const signIn = (user: any) => {
+    setUserData(user);
+    setToken(user.token);
+    localStorage.setItem("token", user.token);
+  };
+
+  const signOut = () => {
+    localStorage.removeItem("token");
+    setToken(undefined);
+    setUserData(null);
+    setIsSeller(false);
+  };
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
 
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString("vi-VN", {
@@ -82,15 +124,12 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
 
   const fetchUserData = async () => {
     try {
-      if (user?.publicMetadata.role === "admin") {
-        setIsSeller(true);
-      }
-      const token = await getToken();
       const { data } = await axios.get("/api/user/data", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (data.success) {
         setUserData(data.user);
+        setIsSeller(data.user.role === "admin");
         setCartItems(data.user.cartItems);
       } else {
         toast.error(data.message);
@@ -101,16 +140,15 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   };
 
   const addToCart = async (itemId: string) => {
-    const cartData = structuredClone(cartItems);
+    const cartData = structuredClone(cartItems || {});
     if (cartData[itemId]) {
       cartData[itemId] += 1;
     } else {
       cartData[itemId] = 1;
     }
     setCartItems(cartData);
-    if (user) {
+    if (token) {
       try {
-        const token = await getToken();
         await axios.post(
           "/api/cart/update",
           { cartData },
@@ -131,9 +169,8 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
       cartData[itemId] = quantity;
     }
     setCartItems(cartData);
-    if (user) {
+    if (token) {
       try {
-        const token = await getToken();
         await axios.post(
           "/api/cart/update",
           { cartData },
@@ -147,8 +184,8 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   };
 
   const getCartCount = () => {
-    return Object.values(cartItems).reduce((total, qty) => total + qty, 0);
-  };
+    return Object.values(cartItems ?? {}).reduce((total, qty) => total + qty, 0);
+  };  
 
   const getCartAmount = () => {
     let totalAmount = 0;
@@ -166,14 +203,13 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (token) {
       fetchUserData();
     }
-  }, [user]);
+  }, [token]);
 
   const value: AppContextType = {
-    user,
-    getToken,
+    token,
     currency,
     isSeller,
     setIsSeller,
@@ -188,6 +224,14 @@ export const AppContextProvider = (props: AppContextProviderProps) => {
     getCartCount,
     getCartAmount,
     formatCurrency,
+    showSignIn,
+    showSignUp,
+    openSignIn,
+    openSignUp,
+    closeModals,
+    signOut,
+    signIn,
+    setUserData,
   };
 
   return (

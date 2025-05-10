@@ -11,14 +11,13 @@ import toast from "react-hot-toast";
 
 const ProductList = () => {
   const router = useRouter();
-  const { getToken, user, formatCurrency } = useAppContext();
+  const { token, userData, formatCurrency } = useAppContext();
 
   const [products, setProducts] = useState<ProductData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchSellerProduct = async () => {
     try {
-      const token = await getToken();
       const { data } = await axios.get("/api/product/seller-list", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -35,10 +34,10 @@ const ProductList = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       fetchSellerProduct();
     }
-  }, [user]);
+  }, [userData]);
 
   return (
     <div className="flex-1 min-h-screen bg-gray-50">

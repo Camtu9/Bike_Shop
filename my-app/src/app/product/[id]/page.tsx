@@ -114,7 +114,6 @@ const ProductPage: React.FC = () => {
               </span>
             )}
           </p>
-          
           <hr className="bg-gray-600 my-6" />
 
           <table className="table-auto border-collapse w-full max-w-72">

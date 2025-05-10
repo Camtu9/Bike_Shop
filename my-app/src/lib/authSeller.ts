@@ -1,10 +1,20 @@
-import { clerkClient } from "@clerk/clerk-sdk-node";
+import jwt from "jsonwebtoken";
+import connectDB from "../../config/db";
+import User from "@/models/User";
 
-const authSeller = async (userId: string): Promise<boolean> => {
+const authSeller = async (token: string): Promise<boolean> => {
   try {
-    console.log("User ID đang kiểm tra:", userId);
-    const user = await clerkClient.users.getUser(userId);
-    return user.publicMetadata.role === "admin";
+    if (!token) {
+      return false;
+    }
+    await connectDB();
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      id: string;
+    };
+
+    const user = await User.findById(decoded.id);
+    return user?.role === "admin";
   } catch (error: any) {
     console.error("authSeller error:", error.message);
     return false;

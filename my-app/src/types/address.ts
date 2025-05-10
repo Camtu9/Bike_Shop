@@ -3,7 +3,6 @@ export type AddressData = {
     userId: string;
     fullName: string;
     phoneNumber: string;
-    pincode: number;
     area: string;
     city: string;
     state: string;
